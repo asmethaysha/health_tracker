@@ -160,9 +160,12 @@ def main():
     for key in file_keys_to_function.keys():
         for i in range(1,11):
             out = historical_weight()
-            curr_dir = os.getcwd()
+            test_dir = os.getcwd()
+            test_dir = os.path.join(test_dir, "test_files")
+            if not os.path.exists(test_dir):
+                os.mkdir(test_dir)
             fname = f"{key}_{i}.csv"
-            fname = os.path.join(curr_dir, fname)
+            fname = os.path.join(test_dir, fname)
             f = open(fname, "w")
             f.write(out)
             f.close()
