@@ -5,6 +5,7 @@ import random
 import pandas as pd
 import string
 import re
+import math
 
 def sleep_tracking():
     """
@@ -13,22 +14,22 @@ def sleep_tracking():
     """
     out = ""
     start = datetime.datetime.today()
-    month = random.randInt(1,13)
-    day = random.randInt(1,29)
-    start = start.replace(hour=random.randInt(20,23), minute=random.randInt(0,60), second=random.randInt(0,60))
+    month = random.randint(1,13)
+    day = random.randint(1,29)
+    start = start.replace(hour=random.randint(20,23), minute=random.randint(0,60), second=random.randint(0,60))
     end = start + timedelta(days=31)
     end = end.replace(hour=0,minute=0,second=0) - timedelta(seconds=1)
     curr = start
     while curr < end:
         starting_timestamp = curr.strftime("%Y-%m-%d %H:%M:%S")
         # let's assume person sleeps anywhere between 0 hours and 10 hours
-        time_slept = random.randInt(0, 36000)
+        time_slept = random.randint(0, 36000)
         ending_timestamp = curr + timedelta(seconds=time_slept)
         ending_timestamp = ending_timestamp.strftime("%Y-%m-%d %H:%M:%S")
         comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))
         comment = re.escape(comment)
-        out += "{},{},{},{}\n".format(starting_timestamp, ending_timestamp, time_selpt, comment)
-        curr += timedelta(days=1)
+        out += "{},{},{},{}\n".format(starting_timestamp, ending_timestamp, time_slept, comment)
+        curr += timedelta(seconds=random.randrange(86400))
     return out
 
 def historical_weight():
@@ -49,26 +50,122 @@ def historical_weight():
             # missing day of recording data)
             continue
         else:
-            while curr < end:
-                dt = curr.strftime("%Y%m%d %H%M%S")
-                weight = weight + random.uniform(-1, 1)
-                out += "{},{:.1f}\n".format(dt, weight)
-                curr += timedelta(days=1)
+            timestamp = curr.strftime("%Y%m%d %H%M%S")
+            weight = weight + random.uniform(-1, 1)
+            out += "{},{:.1f}\n".format(timestamp, weight)
+            curr += timedelta(seconds=random.randrange(86400))
+    return out
+
+def food_tracking():
+    """
+    File structure: timestamp, meal_category, food_name, num_servings, mass, 
+                    vitaminA, vitaminC, vitaminD, vitaminE, iron, 
+                    sodium, carbohydrates, comments
+    DB structure: timestamp, meal_category, food_name, num_servings, mass, 
+                    vitaminA, vitaminC, vitaminD, vitaminE, iron, 
+                    sodium, carbohydrates, comments
+    """
+    out = ""
+    start, end = (
+        datetime.datetime.today() - timedelta(days=30),
+        datetime.datetime.today(),
+    )
+    curr = start
+    while curr < end:
+        if random.random() < 0.1:
+            # the purpose of this is that there should be a 10% chance we don't record data for today (the idea of 
+            # missing day of recording data)
+            continue
+        else:
+            for meal in ["breakfast", "lunch", "dinner"]:
+                if random.random() < 0.1:
+                    # user may forget to record this meal
+                    pass
+                else:
+                    timestamp = curr.strftime("%Y%m%d %H%M%S")
+                    meal_category = meal
+                    food_name = ''.join(random.choices(string.ascii_uppercase, k=100))
+                    mass, serving_mass = random.uniform(10,999), random.uniform(10,999)
+                    num_servings = mass / serving_mass
+                    vitaminA, vitaminC, vitaminD, vitaminE = random.uniform(0,int(math.pow(2, 31))), random.uniform(0,int(math.pow(2, 31))), random.uniform(0,int(math.pow(2, 31))), random.uniform(0,int(math.pow(2, 31)))
+                    iron, sodium, carbohydrates = random.uniform(0,99), random.uniform(0,int(math.pow(2, 31))), random.uniform(0,int(math.pow(2, 31)))
+                    comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))
+                    comment = re.escape(comment)
+                    new_row = "{},{},{},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{}\n".format(timestamp, meal_category, food_name, num_servings, mass, vitaminA, vitaminC, vitaminD, vitaminE, iron, sodium, carbohydrates, comment)
+                    out += new_row
+                    curr += timedelta(seconds=random.randrange(10800))  # approx 3hr
+            curr += timedelta(seconds=random.randrange(36000)) # 10hr
+    return out
+
+def mood_tracking():
+    """
+    File structure: timestamp, happiness_rating, comments
+    DB structure: timestamp, happiness_rating, comments
+    """
+    out = ""
+    start, end = (
+        datetime.datetime.today() - timedelta(days=30),
+        datetime.datetime.today(),
+    )
+    curr = start
+    while curr < end:
+        if random.random() < 0.1:
+            # the purpose of this is that there should be a 10% chance we don't record data for today (the idea of 
+            # missing day of recording data)
+            continue
+        else:
+            timestamp = curr.strftime("%Y%m%d %H%M%S")
+            happiness_rating = random.choice([0,1,2,3,4,5,6,7,8,9,10])
+            comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))
+            comment = re.escape(comment)
+            out += "{},{:.1f},{}\n".format(timestamp, happiness_rating, comment)
+            curr += timedelta(seconds=random.randrange(86400))
+    return out
+
+def exercise_tracking():
+    """
+    File structure: starting_timestamp, ending_timestamp, exercise_name, calories, reps, steps, comments
+    DB structure: starting_timestamp, ending_timestamp, exercise_name, calories, reps, steps, comments
+    """
+    out = ""
+    start, end = (
+        datetime.datetime.today() - timedelta(days=30),
+        datetime.datetime.today(),
+    )
+    curr = start
+    while curr < end:
+        if random.random() < 0.1:
+            # the purpose of this is that there should be a 10% chance we don't record data for today (the idea of 
+            # missing day of recording data)
+            continue
+        else:
+            timestamp = curr.strftime("%Y%m%d %H%M%S")
+            happiness_rating = random.choice([0,1,2,3,4,5,6,7,8,9,10])
+            comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))
+            comment = re.escape(comment)
+            out += "{},{:.1f},{}\n".format(timestamp, happiness_rating, comment)
+            curr += timedelta(seconds=random.randrange(86400))
     return out
 
 
 file_keys_to_function = {
     "historical_weight": historical_weight,
     "sleep_tracking": sleep_tracking,
+    "food_tracking": food_tracking,
+    "mood_tracking": mood_tracking,
+    "exercise_tracking": exercise_tracking,
 }
 
 def main():
     for key in file_keys_to_function.keys():
         for i in range(1,11):
             out = historical_weight()
-            curr_dir = os.getcwd()
+            test_dir = os.getcwd()
+            test_dir = os.path.join(test_dir, "test_files")
+            if not os.path.exists(test_dir):
+                os.mkdir(test_dir)
             fname = f"{key}_{i}.csv"
-            fname = os.path.join(curr_dir, fname)
+            fname = os.path.join(test_dir, fname)
             f = open(fname, "w")
             f.write(out)
             f.close()
