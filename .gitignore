@@ -3,3 +3,4 @@
 *.sqlite
 *.pyc
 *.json
+*.db
