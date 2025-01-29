@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 import datetime
 from datetime import timedelta
 import random
@@ -6,6 +7,14 @@ import pandas as pd
 import string
 import re
 import math
+
+
+def string_cleaner(input):
+    input = input.replace(",", "")
+    input = input.replace("'", "")
+    input = input.replace('"', '')
+    return input
+
 
 def sleep_tracking():
     """
@@ -28,6 +37,7 @@ def sleep_tracking():
         ending_timestamp = ending_timestamp.strftime("%Y-%m-%d %H:%M:%S")
         comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))
         comment = re.escape(comment)
+        comment = string_cleaner(comment)
         out += "{},{},{},{}\n".format(starting_timestamp, ending_timestamp, time_slept, comment)
         curr += timedelta(seconds=random.randrange(86400))
     return out
@@ -52,7 +62,9 @@ def historical_weight():
         else:
             timestamp = curr.strftime("%Y%m%d %H%M%S")
             weight = weight + random.uniform(-1, 1)
-            out += "{},{:.1f}\n".format(timestamp, weight)
+            height = random.uniform(0.5, 2.0)
+            bmi = weight / (height * height)
+            out += "{},{:.1f},{:.1f}\n".format(timestamp, weight, bmi)
             curr += timedelta(seconds=random.randrange(86400))
     return out
 
@@ -91,6 +103,7 @@ def food_tracking():
                     iron, sodium, carbohydrates = random.uniform(0,99), random.uniform(0,int(math.pow(2, 31))), random.uniform(0,int(math.pow(2, 31)))
                     comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))
                     comment = re.escape(comment)
+                    comment = string_cleaner(comment)
                     new_row = "{},{},{},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{}\n".format(timestamp, meal_category, food_name, num_servings, mass, vitaminA, vitaminC, vitaminD, vitaminE, iron, sodium, carbohydrates, comment)
                     out += new_row
                     curr += timedelta(seconds=random.randrange(10800))  # approx 3hr
@@ -117,7 +130,8 @@ def mood_tracking():
             timestamp = curr.strftime("%Y%m%d %H%M%S")
             happiness_rating = random.choice([0,1,2,3,4,5,6,7,8,9,10])
             comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))
-            comment = re.escape(comment)
+            comment = re.escape(comment)        
+            comment = string_cleaner(comment)
             out += "{},{:.1f},{}\n".format(timestamp, happiness_rating, comment)
             curr += timedelta(seconds=random.randrange(86400))
     return out
@@ -139,14 +153,25 @@ def exercise_tracking():
             # missing day of recording data)
             continue
         else:
-            timestamp = curr.strftime("%Y%m%d %H%M%S")
-            happiness_rating = random.choice([0,1,2,3,4,5,6,7,8,9,10])
+            starting_timestamp = curr.strftime("%Y%m%d %H%M%S")
+            ending_timestamp = (curr + timedelta(seconds=random.randint(1, 86400))).strftime("%Y%m%d %H%M%S")
+            excercise_name = "".join(random.choices(string.ascii_letters + "-" + string.digits, k=20))
+            excercise_name = excercise_name.replace(",", "")
+            calories = random.randint(1, 10000000)
+            if random.randint(1,10) > 8:
+                reps = random.randint(1,15)
+            else:
+                reps = ""
+            if random.randint(1,10) > 8:
+                steps = random.randint(1,15)
+            else:
+                steps = ""
             comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))
-            comment = re.escape(comment)
-            out += "{},{:.1f},{}\n".format(timestamp, happiness_rating, comment)
+            comment = re.escape(comment)        
+            comment = string_cleaner(comment)
+            out += "{},{},{},{},{},{},{}\n".format(starting_timestamp, ending_timestamp, excercise_name, calories, reps, steps, comment)
             curr += timedelta(seconds=random.randrange(86400))
     return out
-
 
 file_keys_to_function = {
     "historical_weight": historical_weight,
@@ -159,7 +184,8 @@ file_keys_to_function = {
 def main():
     for key in file_keys_to_function.keys():
         for i in range(1,11):
-            out = historical_weight()
+            print(key, i)
+            out = file_keys_to_function[key]()
             test_dir = os.getcwd()
             test_dir = os.path.join(test_dir, "test_files")
             if not os.path.exists(test_dir):
