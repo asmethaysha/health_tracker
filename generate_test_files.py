@@ -163,7 +163,7 @@ def exercise_tracking():
             else:
                 reps = ""
             if random.randint(1,10) > 8:
-                steps = random.randint(1,15)
+                steps = random.randint(1,100000)
             else:
                 steps = ""
             comment = "".join(random.choices(string.ascii_letters + string.punctuation, k=256))

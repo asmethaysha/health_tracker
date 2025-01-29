@@ -73,7 +73,6 @@ def main():
         create_all_tables = create_all_tables.split(";")
         create_all_tables = [x.strip() for x in create_all_tables]
         for query in create_all_tables:
-            # print(query)
             cursor.execute(query)
         conn.commit()
         conn.close()
@@ -95,6 +94,7 @@ def main():
                 insert_query = insert_query_populator(insert_query_format, file, test_dir)
                 if insert_query:
                     cursor.execute(insert_query)
+    conn.commit()
     conn.close()
 
 
