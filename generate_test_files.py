@@ -19,8 +19,8 @@ def string_cleaner(input):
 
 def sleep_tracking():
     """
-    File structure: starting_timestamp, ending_timestamp, time_slept, comments
-    DB structure: starting_timestamp, ending_timestamp, time_slept, comments
+    File structure: starting_timestamp,ending_timestamp,time_slept,comments
+    DB structure: starting_timestamp,ending_timestamp,time_slept,comments
     """
     out = ""
     start = datetime.datetime.today()
@@ -49,13 +49,14 @@ def sleep_tracking():
             starting_timestamp, ending_timestamp, time_slept, comment
         )
         curr += timedelta(seconds=random.randrange(86400))
+    out = "starting_timestamp,ending_timestamp,time_slept,comments\n" + out
     return out
 
 
 def historical_weight():
     """
-    File structure: timestamp, weight
-    DB structure: timestamp, weight, BMI
+    File structure: timestamp,weight
+    DB structure: timestamp,weight
     """
     out = ""
     start, end = (
@@ -73,20 +74,21 @@ def historical_weight():
             timestamp = curr.strftime("%Y%m%d %H%M%S")
             weight = weight + random.uniform(-1, 1)
             height = random.uniform(0.5, 2.0)
-            bmi = weight / (height * height)
-            out += "{},{:.1f},{:.1f}\n".format(timestamp, weight, bmi)
+            # bmi = weight / (height * height)  # we will calculate this at runtime
+            out += "{},{:.1f}\n".format(timestamp, weight)
             curr += timedelta(seconds=random.randrange(86400))
+    out = "timestamp,weight\n" + out
     return out
 
 
 def food_tracking():
     """
-    File structure: timestamp, meal_category, food_name, num_servings, mass,
-                    vitaminA, vitaminC, vitaminD, vitaminE, iron,
-                    sodium, carbohydrates, comments
-    DB structure: timestamp, meal_category, food_name, num_servings, mass,
-                    vitaminA, vitaminC, vitaminD, vitaminE, iron,
-                    sodium, carbohydrates, comments
+    File structure: timestamp,meal_category,food_name,num_servings,mass,
+                    vitaminA,vitaminC,vitaminD,vitaminE,iron,
+                    sodium,carbohydrates,comments
+    DB structure: timestamp,meal_category,food_name,num_servings,mass,
+                    vitaminA,vitaminC,vitaminD,vitaminE,iron,
+                    sodium,carbohydrates,comments
     """
     out = ""
     start, end = (
@@ -146,13 +148,17 @@ def food_tracking():
                     out += new_row
                     curr += timedelta(seconds=random.randrange(10800))  # approx 3hr
             curr += timedelta(seconds=random.randrange(36000))  # 10hr
+    out = (
+        "timestamp,meal_category,food_name,num_servings,mass,vitaminA,vitaminC,vitaminD,vitaminE,iron,sodium,carbohydrates,comments\n"
+        + out
+    )
     return out
 
 
 def mood_tracking():
     """
-    File structure: timestamp, happiness_rating, comments
-    DB structure: timestamp, happiness_rating, comments
+    File structure: timestamp,happiness_rating,comments
+    DB structure: timestamp,happiness_rating,comments
     """
     out = ""
     start, end = (
@@ -175,13 +181,14 @@ def mood_tracking():
             comment = string_cleaner(comment)
             out += "{},{:.1f},{}\n".format(timestamp, happiness_rating, comment)
             curr += timedelta(seconds=random.randrange(86400))
+    out = "timestamp,happiness_rating,comments\n" + out
     return out
 
 
 def exercise_tracking():
     """
-    File structure: starting_timestamp, ending_timestamp, exercise_name, calories, reps, steps, comments
-    DB structure: starting_timestamp, ending_timestamp, exercise_name, calories, reps, steps, comments
+    File structure: starting_timestamp,ending_timestamp,exercise_name,calories,reps,steps,comments
+    DB structure: starting_timestamp,ending_timestamp,exercise_name,calories,reps,steps,comments
     """
     out = ""
     start, end = (
@@ -227,6 +234,10 @@ def exercise_tracking():
                 comment,
             )
             curr += timedelta(seconds=random.randrange(86400))
+    out = (
+        "starting_timestamp,ending_timestamp,exercise_name,calories,reps,steps,comments\n"
+        + out
+    )
     return out
 
 

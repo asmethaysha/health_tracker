@@ -43,7 +43,7 @@ def insert_query_populator(insert_query_format, file, test_dir):
     f.close()
     if not len(data.strip()):
         return
-    data = data.split("\n")
+    data = data.split("\n")[1:]  # excluding header
     data = [x for x in data if x.strip()]
     for datum in data:
         # datum is comma separated values
@@ -58,23 +58,23 @@ def insert_query_populator(insert_query_format, file, test_dir):
 
 def main():
     curr_dir = pathlib.Path().resolve()
-    test_dir, local_db_path = os.path.join(curr_dir, "test_files"), os.path.join(
-        curr_dir, "local.db"
+    test_dir, test_db_path = os.path.join(curr_dir, "test_files"), os.path.join(
+        curr_dir, "test.db"
     )
     if not os.listdir(test_dir):
         print("No files found here, exiting!")
         return
-    if not os.path.exists(local_db_path):
-        conn = sqlite3.connect("local.db")
+    if not os.path.exists(test_db_path):
+        conn = sqlite3.connect("test.db")
         cursor = conn.cursor()
         # create db if DNE
         # Create tables that don't exist
         create_all_tables = (
-            "CREATE TABLE SLEEP_TRACKING(starting_ts TIMESTAMP NOT NULL, ending_ts TIMESTAMP NOT NULL, time_slept INTEGER NOT NULL, comments VARCHAR); "
-            "CREATE TABLE HISTORICAL_WEIGHT(ts TIMESTAMP NOT NULL, weight FLOAT NOT NULL, bmi FLOAT); "
-            "CREATE TABLE FOOD_TRACKING(ts TIMESTAMP NOT NULL, meal_category VARCHAR NOT NULL, food_name VARCHAR NOT NULL, num_servings FLOAT NOT NULL, mass FLOAT, vitA FLOAT, vitC FLOAT, vitD FLOAT, vitE FLOAT, iron FLOAT, sodium FLOAT, carbohydrates FLOAT, comments VARCHAR); "
-            "CREATE TABLE MOOD_TRACKING(ts TIMESTAMP, happiness_rating INTEGER, comments VARCHAR); "
-            "CREATE TABLE EXERCISE_TRACKING(starting_ts TIMESTAMP NOT NULL, ending_ts TIMESTAMP NOT NULL, exercise_name VARCHAR NOT NULL, calories INTEGER NOT NULL, reps INTEGER, steps INTEGER, comments VARCHAR);"
+            "CREATE TABLE SLEEP_TRACKING(starting_timestamp TIMESTAMP NOT NULL, ending_timestamp TIMESTAMP NOT NULL, time_slept INTEGER NOT NULL, comments VARCHAR); "
+            "CREATE TABLE HISTORICAL_WEIGHT(timestamp TIMESTAMP NOT NULL, weight FLOAT NOT NULL); "
+            "CREATE TABLE FOOD_TRACKING(timestamp TIMESTAMP NOT NULL, meal_category VARCHAR NOT NULL, food_name VARCHAR NOT NULL, num_servings FLOAT NOT NULL, mass FLOAT, vitA FLOAT, vitC FLOAT, vitD FLOAT, vitE FLOAT, iron FLOAT, sodium FLOAT, carbohydrates FLOAT, comments VARCHAR); "
+            "CREATE TABLE MOOD_TRACKING(timestamp TIMESTAMP, happiness_rating INTEGER, comments VARCHAR); "
+            "CREATE TABLE EXERCISE_TRACKING(starting_timestamp TIMESTAMP NOT NULL, ending_timestamp TIMESTAMP NOT NULL, exercise_name VARCHAR NOT NULL, calories INTEGER NOT NULL, reps INTEGER, steps INTEGER, comments VARCHAR);"
         )
         create_all_tables = create_all_tables.split(";")
         create_all_tables = [x.strip() for x in create_all_tables]
@@ -82,8 +82,8 @@ def main():
             cursor.execute(query)
         conn.commit()
         conn.close()
-    if os.path.exists(local_db_path):
-        conn = sqlite3.connect("local.db")
+    if os.path.exists(test_db_path):
+        conn = sqlite3.connect("test.db")
         cursor = conn.cursor()
         check_query = "SELECT * FROM sqlite_schema WHERE type='table' ORDER BY name"
         cursor.execute(check_query)
