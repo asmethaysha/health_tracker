@@ -42,20 +42,6 @@ test_db_path = os.path.join(proj_dir, "test.db")
 test_files_path = pathlib.Path(__file__).resolve().parent
 conn = sqlite3.connect(test_db_path)
 
-# @pytest.fixture
-# def db_connection():
-#     """Creates a connection to the SQLite database."""
-#     conn = sqlite3.connect(test_db_path)
-#     yield conn
-#     conn.close()
-
-
-print(test_files_path)
-
-# @pytest.fixture
-# def cursor():
-# yield conn().cursor()
-
 
 def test_db_exists():
     assert os.path.exists(test_db_path)
@@ -66,10 +52,8 @@ def test_exercise_tracking_has_content():
     query = "SELECT * FROM EXERCISE_TRACKING"
     df_test_db = pd.read_sql_query(query, conn)
     df_test_db.fillna("", inplace=True)
-    exercise_files = [
-        x for x in os.listdir(test_files_path) if "exercise_tracking" in x
-    ]
-    for file in exercise_files:
+    test_files = [x for x in os.listdir(test_files_path) if "exercise_tracking" in x]
+    for file in test_files:
         file_path = os.path.join(test_files_path, file)
         df_csv = pd.read_csv(file_path)
         assert list(df_csv.columns) == list(df_test_db.columns)
@@ -84,58 +68,64 @@ def test_exercise_tracking_has_content():
         ), f"Missing rows in database:\n{missing_rows.to_string()}"
 
 
-# def test_food_tracking_has_content():
-#     try:
-#         path = os.path.join(proj_dir, "test_files")
-#         query = "SELECT * FROM FOOD_TRACKING"
-#         df_test_db = pd.read_sql_query(query, conn)
-#         for file in os.listdir():
-#             df_csv = pd.read_csv(file)
-#             assert df_csv.columns == df_test_db.columns
-#             merged_data = df_csv.merge(df_test_db, how="left", indicator=True)
-#             missing_rows = merged_data[merged_data["_merge"] == "left_only"].drop(
-#                 columns=["_merge"]
-#             )
-#             assert (
-#                 missing_rows.empty
-#             )  # there are no rows that exist in csv but not in db
-#     except:
-#         print(" 4")
+def test_food_tracking_has_content():
+    path = os.path.join(proj_dir, "test_files")
+    query = "SELECT * FROM FOOD_TRACKING"
+    df_test_db = pd.read_sql_query(query, conn)
+    df_test_db.fillna("", inplace=True)
+    test_files = [x for x in os.listdir(test_files_path) if "food_tracking" in x]
+    for file in test_files:
+        file_path = os.path.join(test_files_path, file)
+        df_csv = pd.read_csv(file_path)
+        assert list(df_csv.columns) == list(df_test_db.columns)
+        df_csv.fillna("", inplace=True)
+        merged_data = df_csv.merge(df_test_db, how="left", indicator=True)
+        missing_rows = merged_data[merged_data["_merge"] == "left_only"].drop(
+            columns=["_merge"]
+        )
+        # Test fails if there are missing rows
+        assert (
+            missing_rows.empty
+        ), f"Missing rows in database:\n{missing_rows.to_string()}"
 
 
-# def test_historical_weight_has_content():
-#     try:
-#         path = os.path.join(proj_dir, "test_files")
-#         query = "SELECT * FROM HISTORICAL_WEIGHT"
-#         df_test_db = pd.read_sql_query(query, conn)
-#         for file in os.listdir():
-#             df_csv = pd.read_csv(file)
-#             assert df_csv.columns == df_test_db.columns
-#             merged_data = df_csv.merge(df_test_db, how="left", indicator=True)
-#             missing_rows = merged_data[merged_data["_merge"] == "left_only"].drop(
-#                 columns=["_merge"]
-#             )
-#             assert (
-#                 missing_rows.empty
-#             )  # there are no rows that exist in csv but not in db
-#     except:
-#         print(" 5")
+def test_historical_weight_has_content():
+    path = os.path.join(proj_dir, "test_files")
+    query = "SELECT * FROM HISTORICAL_WEIGHT"
+    df_test_db = pd.read_sql_query(query, conn)
+    df_test_db.fillna("", inplace=True)
+    test_files = [x for x in os.listdir(test_files_path) if "historical_weight" in x]
+    for file in test_files:
+        file_path = os.path.join(test_files_path, file)
+        df_csv = pd.read_csv(file_path)
+        assert list(df_csv.columns) == list(df_test_db.columns)
+        df_csv.fillna("", inplace=True)
+        merged_data = df_csv.merge(df_test_db, how="left", indicator=True)
+        missing_rows = merged_data[merged_data["_merge"] == "left_only"].drop(
+            columns=["_merge"]
+        )
+        # Test fails if there are missing rows
+        assert (
+            missing_rows.empty
+        ), f"Missing rows in database:\n{missing_rows.to_string()}"
 
 
-# def test_mood_tracking_has_content():
-#     try:
-#         path = os.path.join(proj_dir, "test_files")
-#         query = "SELECT * FROM MOOD_TRACKING"
-#         df_test_db = pd.read_sql_query(query, conn)
-#         for file in os.listdir():
-#             df_csv = pd.read_csv(file)
-#             assert df_csv.columns == df_test_db.columns
-#             merged_data = df_csv.merge(df_test_db, how="left", indicator=True)
-#             missing_rows = merged_data[merged_data["_merge"] == "left_only"].drop(
-#                 columns=["_merge"]
-#             )
-#             assert (
-#                 missing_rows.empty
-#             )  # there are no rows that exist in csv but not in db
-#     except:
-#         print(" 6")
+def test_sleep_tracking_has_content():
+    path = os.path.join(proj_dir, "test_files")
+    query = "SELECT * FROM SLEEP_TRACKING"
+    df_test_db = pd.read_sql_query(query, conn)
+    df_test_db.fillna("", inplace=True)
+    test_files = [x for x in os.listdir(test_files_path) if "sleep_tracking" in x]
+    for file in test_files:
+        file_path = os.path.join(test_files_path, file)
+        df_csv = pd.read_csv(file_path)
+        assert list(df_csv.columns) == list(df_test_db.columns)
+        df_csv.fillna("", inplace=True)
+        merged_data = df_csv.merge(df_test_db, how="left", indicator=True)
+        missing_rows = merged_data[merged_data["_merge"] == "left_only"].drop(
+            columns=["_merge"]
+        )
+        # Test fails if there are missing rows
+        assert (
+            missing_rows.empty
+        ), f"Missing rows in database:\n{missing_rows.to_string()}"
