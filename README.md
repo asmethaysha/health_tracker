@@ -4,9 +4,21 @@ This is a web application which will be personal health tracker for our users. T
 # Phase0
 Phase0 and its corresponding commits are related to the configuration management exercise. This is likely to have limited consequence on the larger project.
 
-# Phase1 - in progress
+# Phase1 - DONE
 Phase1 is about creating a script that takes advantage of Python's random package to create test files for our ingestion system to ingest and output sqlite files. 
+Challenges included: 
+- file ingestion formatting and making this cooperate with table structure
+- data cleaning
+- pytest implementation
+- using random to generate test files
 
+Simple steps for testing data ingestion:
+- Make sure there are no .csvs in test_files/ and no test.db file in main project directory
+```
+cisc594_project>python generate_test_files.py
+cisc594_project>python ingest_test_files.py
+cisc594_project>pytest
+```
 # Phase2 - TBD
 This phase will focus on data processing and visualization to allow users to develop effective ways to analyze and understand their data. 
 

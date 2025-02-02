@@ -5,6 +5,9 @@ import pytest
 import sqlite3
 import pandas as pd
 import pathlib
+import datetime
+from datetime import timedelta
+import time
 
 
 def convert_to_insert_template(create_cmd):
@@ -68,6 +71,36 @@ def test_exercise_tracking_has_content():
         ), f"Missing rows in database:\n{missing_rows.to_string()}"
 
 
+def test_insert_delete_exercise_tracking():
+    cursor = conn.cursor()
+    select_query = "SELECT count(*) FROM EXERCISE_TRACKING"
+    cursor.execute(select_query)
+    old_count = int(cursor.fetchall()[0][0])
+    assert old_count is not None
+    start = datetime.datetime.now()
+    end = start + timedelta(minutes=60)
+    start, end = start.strftime("%Y%m%d %H%M%S"), end.strftime("%Y%m%d %H%M%S")
+    exercise_name = "Running"
+    calories, reps, steps = "800", "", "10000"
+    comments = "My first 10k!"
+    insert_query = "INSERT INTO EXERCISE_TRACKING (starting_timestamp,ending_timestamp,exercise_name,calories,reps,steps,comments)"
+    insert_query += f"VALUES ('{start}','{end}','{exercise_name}','{calories}','{reps}','{steps}','{comments}');"
+    cursor.execute(insert_query)
+    conn.commit()
+    cursor.execute(select_query)
+    new_count = int(cursor.fetchall()[0][0])
+    assert new_count is not None
+    assert new_count - old_count == 1
+    del_query = f"DELETE FROM EXERCISE_TRACKING WHERE comments='{comments}'"
+    print(del_query)
+    cursor.execute(del_query)
+    conn.commit()
+    cursor.execute(select_query)
+    new_count = int(cursor.fetchall()[0][0])
+    assert new_count is not None
+    assert new_count == old_count
+
+
 def test_food_tracking_has_content():
     path = os.path.join(proj_dir, "test_files")
     query = "SELECT * FROM FOOD_TRACKING"
@@ -108,6 +141,33 @@ def test_historical_weight_has_content():
         assert (
             missing_rows.empty
         ), f"Missing rows in database:\n{missing_rows.to_string()}"
+
+
+def test_insert_delete_historical_weight():
+    cursor = conn.cursor()
+    select_query = "SELECT count(*) FROM HISTORICAL_WEIGHT"
+    cursor.execute(select_query)
+    old_count = int(cursor.fetchall()[0][0])
+    assert old_count is not None
+    start = datetime.datetime.now()
+    start = start.strftime("%Y%m%d %H%M%S")
+    weight = "60"
+    insert_query = "INSERT INTO HISTORICAL_WEIGHT (timestamp,weight)"
+    insert_query += f"VALUES ('{start}','{weight}');"
+    cursor.execute(insert_query)
+    conn.commit()
+    cursor.execute(select_query)
+    new_count = int(cursor.fetchall()[0][0])
+    assert new_count is not None
+    assert new_count - old_count == 1
+    del_query = f"DELETE FROM HISTORICAL_WEIGHT WHERE timestamp='{start}' and weight='{weight}';"
+    print(del_query)
+    cursor.execute(del_query)
+    conn.commit()
+    cursor.execute(select_query)
+    new_count = int(cursor.fetchall()[0][0])
+    assert new_count is not None
+    assert new_count == old_count
 
 
 def test_sleep_tracking_has_content():
