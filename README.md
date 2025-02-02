@@ -12,13 +12,15 @@ Challenges included:
 - pytest implementation
 - using random to generate test files
 
-Simple steps for testing data ingestion:
-- Make sure there are no .csvs in test_files/ and no test.db file in main project directory
+Simple steps for testing data ingestion (when running locally):
+- First make sure there are no .csvs in ~/test_files/ and no test.db file in main project directory
+- Then do:
 ```
 cisc594_project>python generate_test_files.py
 cisc594_project>python ingest_test_files.py
 cisc594_project>pytest
 ```
+This phase has been tested using github's in-built testing system that is able to take advantage of pytests.
 # Phase2 - TBD
 This phase will focus on data processing and visualization to allow users to develop effective ways to analyze and understand their data. 
 
