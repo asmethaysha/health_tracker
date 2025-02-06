@@ -74,7 +74,7 @@ def main():
             "CREATE TABLE HISTORICAL_WEIGHT(timestamp TIMESTAMP NOT NULL, weight FLOAT NOT NULL); "
             "CREATE TABLE FOOD_TRACKING(timestamp TIMESTAMP NOT NULL, meal_category VARCHAR NOT NULL, calories INTEGER NOT NULL, food_name VARCHAR NOT NULL, num_servings FLOAT NOT NULL, mass FLOAT, vitaminA FLOAT, vitaminC FLOAT, vitaminD FLOAT, vitaminE FLOAT, iron FLOAT, sodium FLOAT, carbohydrates FLOAT, comments VARCHAR); "
             "CREATE TABLE MOOD_TRACKING(timestamp TIMESTAMP, happiness_rating INTEGER, comments VARCHAR); "
-            "CREATE TABLE EXERCISE_TRACKING(starting_timestamp TIMESTAMP NOT NULL, ending_timestamp TIMESTAMP NOT NULL, exercise_name VARCHAR NOT NULL, calories_burned INTEGER NOT NULL, reps INTEGER, steps INTEGER, comments VARCHAR);"
+            "CREATE TABLE EXERCISE_TRACKING(starting_timestamp TIMESTAMP NOT NULL, ending_timestamp TIMESTAMP NOT NULL, exercise_name VARCHAR NOT NULL, calories_burned INTEGER NOT NULL, reps INTEGER, steps INTEGER DEFAULT 0 NOT NULL, comments VARCHAR);"
         )
         create_all_tables = create_all_tables.split(";")
         create_all_tables = [x.strip() for x in create_all_tables]
