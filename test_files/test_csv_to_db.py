@@ -322,31 +322,6 @@ def test_sleep_tracking_has_content():
             missing_rows.empty
         ), f"Missing rows in database:\n{missing_rows.to_string()}"
 
-    cursor = conn.cursor()
-    select_query = "SELECT count(*) FROM SLEEP_TRACKING"
-    cursor.execute(select_query)
-    old_count = int(cursor.fetchall()[0][0])
-    assert old_count is not None
-    start = datetime.datetime.now()
-    start = start.strftime("%Y-%m-%d %H:%M:%S")
-    weight = "60"
-    insert_query = "INSERT INTO HISTORICAL_WEIGHT (timestamp,weight)"
-    insert_query += f"VALUES ('{start}','{weight}');"
-    cursor.execute(insert_query)
-    conn.commit()
-    cursor.execute(select_query)
-    new_count = int(cursor.fetchall()[0][0])
-    assert new_count is not None
-    assert new_count - old_count == 1
-    del_query = f"DELETE FROM HISTORICAL_WEIGHT WHERE timestamp='{start}' and weight='{weight}';"
-    print(del_query)
-    cursor.execute(del_query)
-    conn.commit()
-    cursor.execute(select_query)
-    new_count = int(cursor.fetchall()[0][0])
-    assert new_count is not None
-    assert new_count == old_count
-
 
 def test_insert_delete_sleep_tracking():
     cursor = conn.cursor()
