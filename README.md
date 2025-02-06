@@ -7,10 +7,10 @@ Phase0 and its corresponding commits are related to the configuration management
 # Phase1 - DONE
 Phase1 is about creating a script that takes advantage of Python's random package to create test files for our ingestion system to ingest and output sqlite files. 
 Challenges included: 
-- file ingestion formatting and making this cooperate with table structure
-- data cleaning
-- pytest implementation
-- using random to generate test files
+- File ingestion formatting and making this cooperate with table structure
+- Data cleaning
+- Pytest implementation
+- Using random to generate test files
 
 Simple steps for testing data ingestion (when running locally):
 - First make sure there are no .csvs in ~/test_files/ and no test.db file in main project directory
@@ -21,8 +21,12 @@ cisc594_project>python ingest_test_files.py
 cisc594_project>pytest
 ```
 This phase has been tested using github's in-built testing system that is able to take advantage of pytests.
-# Phase2 - TBD
-This phase will focus on data processing and visualization to allow users to develop effective ways to analyze and understand their data. 
+# Phase2 - DONE
+Phase2 is about creating a script that takes the randomized data generated in Phase1 to read from the SQLite database and output .jpg and .pkl files containing results.
+Challenges included:
+- Generalizing the extraction of tables in SQLite to DataFrames
+- Using and making DataFrames comply with Matplotlib
+- Using Pytest to test whether data is displayable
 
 # Phase3 - TBD
 This phase will focus on UI development.
