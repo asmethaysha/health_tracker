@@ -1,15 +1,15 @@
 import os
 import sys
+import pickle
 import pandas as pd
+import pathlib
 import sqlite3
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import datetime
-from datetime import timedelta
 import random
 
 all_tables_dict = {
-    # "HISTORICAL_WEIGHT": ["weight", "bmi"],
+    "HISTORICAL_WEIGHT": ["weight", "bmi"],
     "SLEEP_TRACKING": ["time_slept"],
     "FOOD_TRACKING": [
         "calories",
@@ -23,7 +23,11 @@ all_tables_dict = {
         "carbohydrates",
     ],
     "MOOD_TRACKING": ["happiness_rating"],
-    "EXERCISE_TRACKING": ["steps", "calories", "time_worked_out"],
+    "EXERCISE_TRACKING": [
+        "steps",
+        "calories_burned",
+        "exercise_time",
+    ],
 }
 
 
@@ -41,23 +45,26 @@ def time_slept_to_hrs(df):
     return df
 
 
-def time_worked_out(df):
-    df["time_worked_out"] = (
-        df["ending_timestamp"] - df["starting_timestamp"]
-    ).total_seconds()
+def exercise_time(df):
+    df["exercise_time"] = pd.to_datetime(df["ending_timestamp"]) - pd.to_datetime(
+        df["starting_timestamp"]
+    )
+    df["exercise_time"] = df["exercise_time"].dt.total_seconds() / 60
     return df
 
 
 all_functions_dict = {
     "bmi": bmi_calculator,
     "time_slept": time_slept_to_hrs,
-    "time_worked_out": time_worked_out,
+    "exercise_time": exercise_time,
 }
 
 conn = sqlite3.connect("test.db")
 
 
 def main():
+    proj_dir = pathlib.Path().resolve()
+    test_files_path = os.path.join(proj_dir, "test_files")
     for table in all_tables_dict.keys():
         x_axis = ""
         for try_x_axis in ["timestamp", "starting_timestamp"]:
@@ -69,82 +76,47 @@ def main():
                 continue
         if not x_axis:
             print("ERROR - NO VALID COLUMN FOUND")
+            print(table)
             sys.exit(1)
         for y_axis in all_tables_dict[table]:
-            # for y_col in all_tables_dict["table"]:
-            #     pass
-            # data[x_col] = data[x_col].apply(
-            #     lambda x: datetime.datetime.strptime(x, "%Y%m%d %H%M%S")
-            # )
-            # data[y_axis] = data[y_axis].apply(lambda x: int(x))
             if y_axis in all_functions_dict:
                 update_df = all_functions_dict[y_axis]
                 df = update_df(df)
             df[x_axis] = pd.to_datetime(df[x_axis], format="%Y-%m-%d %H:%M:%S")
             plt.figure(figsize=(10, 5))
-            plt.plot(df[x_axis], df[y_axis], marker="o", linestyle="-")
+            try:
+                plt.plot(df[x_axis], df[y_axis], marker="o", linestyle="-")
+            except Exception as e:
+                print(e)
+                print("TABLE failed", table, y_axis)
             plt.xlabel("Date & Time")
-            plt.ylabel(y_axis)
-            plt.title(f"{y_axis.capitalize()} Graph")
-            plt.xticks(rotation=45)  # Rotate x-axis labels for readability
+            title = y_axis
+            if title == "bmi":
+                title = "BMI"
+            else:
+                if "vit".lower() in title.lower():
+                    title = title[:-1].capitalize() + " " + y_axis[-1]
+                if "_" in title:
+                    title = " ".join([x.capitalize() for x in title.split("_")])
+                else:
+                    title = title.capitalize()
+            plt.ylabel(y_axis.replace("_", " "))
+            plt.title(f"{title} Graph")
+            plt.xticks(rotation=15)  # Rotate x-axis labels for readability
             plt.grid(True)
             # Improve date formatting on x-axis
-            plt.gca().xaxis.set_major_formatter(
-                mdates.DateFormatter("%Y-%m-%d %H:%M")
-            )  # Format labels
-            plt.gca().xaxis.set_major_locator(
-                mdates.AutoDateLocator()
-            )  # Auto-adjust label frequency
-            # Show the plot
-            plt.show()
-            # x_vals = df[x_col].values.tolist()
-            # y_vals = df["weight"].values.tolist()
-            # print(x_vals)
-            # plt.gca().xaxis.set_major_formatter(mdates.AutoDateFormatter())
-            # plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=10))
-            # plt.plot(x_vals, y_vals)
-            # # plt.gcf().autofmt_xdate()
-            # plt.show()
-            # data[x_col] = data[x_col].astype(str)
-            # data[ts_col] = pd.to_datetime(data[ts_col], format="%Y%m%d %H%M%S")
-            # data[ts_col] = data[ts_col].apply(
-            #     lambda x: datetime.datetime.strptime(x, "%Y%m%d %H%M%S")
-            # )
-            # print(data)
-            # data.plot(
-            #     x="timestamp",
-            #     y="weight",
-            #     kind="scatter",
-            # )  # xticks=xticks)
-            # plt.show()
-            # min_dt = min(data[ts_col])
-            # # min_dt = datetime.datetime.strptime(min_dt, "%Y%m%d %H%M%S")
-            # max_dt = max(data[ts_col])
-            # # max_dt = datetime.datetime.strptime(max_dt, "%Y%m%d %H%M%S")
-            # xticks = []
-            # full_delta = (max_dt - min_dt).days
-            # print(full_delta)
-            # avg_delta = full_delta / 10
-            # print(avg_delta)
-            # while min_dt < max_dt:
-            #     xticks.append(min_dt.strftime("%Y%m%d 000000"))
-            #     # xticks.append(
-            #     #     min_dt.replace(
-            #     #         hour=0,
-            #     #         minute=0,
-            #     #     )
-            #     # )
-            #     min_dt = min_dt + timedelta(days=2)
-            # # plt.plot(data["timestamp"], data["weight"])
-            # # plt.xticks(xticks)
-            # # print(data["timestamp"])
-            # data.plot(
-            #     x="timestamp",
-            #     y="weight",
-            #     # kind="scatter",
-            # )  # xticks=xticks)
-            # # plt.xticks(xticks)
-            # plt.show()
+            plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M"))
+            plt.gca().xaxis.set_major_locator(mdates.AutoDateLocator())
+            plt.tight_layout()
+            file_name = f"{table}_{y_axis}.jpg"
+            pickle_name = f"{table}_{y_axis}.pkl"
+            file_path = os.path.join(test_files_path, file_name)
+            pickle_path = os.path.join(test_files_path, pickle_name)
+            plt.savefig(file_path)
+            fig = plt.gcf()
+            with open(pickle_path, "wb") as f:
+                pickle.dump(fig, f)
+            plt.close()
 
 
 main()

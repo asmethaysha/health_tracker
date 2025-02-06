@@ -3,7 +3,9 @@ import pytest
 import sqlite3
 import pandas as pd
 import pathlib
+import pickle
 import datetime
+import matplotlib.pyplot as plt
 from datetime import timedelta
 
 
@@ -37,7 +39,6 @@ def convert_to_insert_template(create_cmd):
 
 
 proj_dir = pathlib.Path().resolve()
-# proj_dir = pathlib.Path(pathlib.Path(current_file)
 test_db_path = os.path.join(proj_dir, "test.db")
 test_files_path = pathlib.Path(__file__).resolve().parent
 conn = sqlite3.connect(test_db_path)
@@ -48,7 +49,6 @@ def test_db_exists():
 
 
 def test_exercise_tracking_has_content():
-    path = os.path.join(proj_dir, "test_files")
     query = "SELECT * FROM EXERCISE_TRACKING"
     df_test_db = pd.read_sql_query(query, conn)
     df_test_db.fillna("", inplace=True)
@@ -76,12 +76,12 @@ def test_insert_delete_exercise_tracking():
     assert old_count is not None
     start = datetime.datetime.now()
     end = start + timedelta(minutes=60)
-    start, end = start.strftime("%Y%m%d %H%M%S"), end.strftime("%Y%m%d %H%M%S")
+    start, end = start.strftime("%Y-%m-%d %H:%M:%S"), end.strftime("%Y-%m-%d %H:%M:%S")
     exercise_name = "Running"
-    calories, reps, steps = "800", "", "10000"
+    calories_burned, reps, steps = "800", "", "10000"
     comments = "My first 10k!"
-    insert_query = "INSERT INTO EXERCISE_TRACKING (starting_timestamp,ending_timestamp,exercise_name,calories,reps,steps,comments)"
-    insert_query += f"VALUES ('{start}','{end}','{exercise_name}','{calories}','{reps}','{steps}','{comments}');"
+    insert_query = "INSERT INTO EXERCISE_TRACKING (starting_timestamp,ending_timestamp,exercise_name,calories_burned,reps,steps,comments)"
+    insert_query += f"VALUES ('{start}','{end}','{exercise_name}','{calories_burned}','{reps}','{steps}','{comments}');"
     cursor.execute(insert_query)
     conn.commit()
     cursor.execute(select_query)
@@ -99,7 +99,6 @@ def test_insert_delete_exercise_tracking():
 
 
 def test_food_tracking_has_content():
-    path = os.path.join(proj_dir, "test_files")
     query = "SELECT * FROM FOOD_TRACKING"
     df_test_db = pd.read_sql_query(query, conn)
     df_test_db.fillna("", inplace=True)
@@ -119,8 +118,40 @@ def test_food_tracking_has_content():
         ), f"Missing rows in database:\n{missing_rows.to_string()}"
 
 
+def test_insert_delete_food_tracking():
+    cursor = conn.cursor()
+    select_query = "SELECT count(*) FROM FOOD_TRACKING"
+    cursor.execute(select_query)
+    old_count = int(cursor.fetchall()[0][0])
+    assert old_count is not None
+    timestamp = datetime.datetime.now()
+    meal_category, food_name, comments = (
+        "midnight_snack",
+        "popcorn",
+        "Should not have eaten this",
+    )
+    calories, num_servings, mass = 400, 2, 250
+    vitaminA, vitaminC, vitaminD, vitaminE = 0, 0, 0, 0
+    iron, sodium, carbohydrates = 1, 1000, 100
+    timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")
+    insert_query = "INSERT INTO FOOD_TRACKING (timestamp,meal_category,calories,food_name,num_servings,mass,vitaminA,vitaminC,vitaminD,vitaminE,iron,sodium,carbohydrates,comments)"
+    insert_query += f"VALUES ('{timestamp}','{meal_category}','{calories}','{food_name}','{num_servings}','{mass}','{vitaminA}','{vitaminC}','{vitaminD}','{vitaminE}','{iron}','{sodium}','{carbohydrates}','{comments}');"
+    cursor.execute(insert_query)
+    conn.commit()
+    cursor.execute(select_query)
+    new_count = int(cursor.fetchall()[0][0])
+    assert new_count is not None
+    assert new_count - old_count == 1
+    del_query = f"DELETE FROM FOOD_TRACKING WHERE comments='{comments}'"
+    cursor.execute(del_query)
+    conn.commit()
+    cursor.execute(select_query)
+    new_count = int(cursor.fetchall()[0][0])
+    assert new_count is not None
+    assert new_count == old_count
+
+
 def test_historical_weight_has_content():
-    path = os.path.join(proj_dir, "test_files")
     query = "SELECT * FROM HISTORICAL_WEIGHT"
     df_test_db = pd.read_sql_query(query, conn)
     df_test_db.fillna("", inplace=True)
@@ -147,7 +178,7 @@ def test_insert_delete_historical_weight():
     old_count = int(cursor.fetchall()[0][0])
     assert old_count is not None
     start = datetime.datetime.now()
-    start = start.strftime("%Y%m%d %H%M%S")
+    start = start.strftime("%Y-%m-%d %H:%M:%S")
     weight = "60"
     insert_query = "INSERT INTO HISTORICAL_WEIGHT (timestamp,weight)"
     insert_query += f"VALUES ('{start}','{weight}');"
@@ -168,7 +199,6 @@ def test_insert_delete_historical_weight():
 
 
 def test_sleep_tracking_has_content():
-    path = os.path.join(proj_dir, "test_files")
     query = "SELECT * FROM SLEEP_TRACKING"
     df_test_db = pd.read_sql_query(query, conn)
     df_test_db.fillna("", inplace=True)
@@ -186,3 +216,73 @@ def test_sleep_tracking_has_content():
         assert (
             missing_rows.empty
         ), f"Missing rows in database:\n{missing_rows.to_string()}"
+
+
+def test_insert_delete_sleep_tracking():
+    cursor = conn.cursor()
+    select_query = "SELECT count(*) FROM SLEEP_TRACKING"
+    cursor.execute(select_query)
+    old_count = int(cursor.fetchall()[0][0])
+    assert old_count is not None
+    start = datetime.datetime.now()
+    end = start + timedelta(hours=6)
+    time_slept = (end - start).total_seconds()
+    start, end = start.strftime("%Y-%m-%d %H:%M:%S"), end.strftime("%Y-%m-%d %H:%M:%S")
+    comments = "Goodnight"
+    weight = "60"
+    insert_query = "INSERT INTO SLEEP_TRACKING (starting_timestamp,ending_timestamp,time_slept,comments)"
+    insert_query += f"VALUES ('{start}','{end}','{time_slept}','{comments}');"
+    cursor.execute(insert_query)
+    conn.commit()
+    cursor.execute(select_query)
+    new_count = int(cursor.fetchall()[0][0])
+    assert new_count is not None
+    assert new_count - old_count == 1
+    del_query = f"DELETE FROM SLEEP_TRACKING WHERE starting_timestamp='{start}' and time_slept='{time_slept}';"
+    cursor.execute(del_query)
+    conn.commit()
+    cursor.execute(select_query)
+    new_count = int(cursor.fetchall()[0][0])
+    assert new_count is not None
+    assert new_count == old_count
+
+
+def test_successful_generation_display_of_plots():
+    all_tables_dict = {
+        "HISTORICAL_WEIGHT": ["weight", "bmi"],
+        "SLEEP_TRACKING": ["time_slept"],
+        "FOOD_TRACKING": [
+            "calories",
+            "mass",
+            "vitaminA",
+            "vitaminC",
+            "vitaminD",
+            "vitaminE",
+            "iron",
+            "sodium",
+            "carbohydrates",
+        ],
+        "MOOD_TRACKING": ["happiness_rating"],
+        "EXERCISE_TRACKING": [
+            "steps",
+            "calories_burned",
+            "exercise_time",
+        ],
+    }
+
+    def plot_fn():
+        plt.show()
+        return True
+
+    for table in all_tables_dict.keys():
+        for y_axis in all_tables_dict[table]:
+            img_name = f"{table}_{y_axis}.jpg"
+            pkl_name = f"{table}_{y_axis}.pkl"
+            img_file_path = os.path.join(test_files_path, img_name)
+            pkl_file_path = os.path.join(test_files_path, pkl_name)
+            assert os.path.exists(img_file_path)
+            with open(pkl_file_path, "rb") as f:
+                fig = pickle.load(f)
+                assert fig
+                with plt.ion():
+                    assert plot_fn()
