@@ -72,6 +72,7 @@ def main():
             try:
                 df = pd.read_sql_query(query, conn)
                 x_axis = try_x_axis
+                break  # break because by next line we have confirmed what our x_axis is
             except:
                 continue
         if not x_axis:
