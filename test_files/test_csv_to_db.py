@@ -5,7 +5,6 @@ import pandas as pd
 import pathlib
 import pickle
 import datetime
-import time
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import random
@@ -68,6 +67,46 @@ def exercise_time(df):
     return df
 
 
+def make_plot(table, x_axis, df):
+    for y_axis in all_tables_dict[table]:
+        if y_axis in all_functions_dict.keys():
+            update_df = all_functions_dict[y_axis]
+            df = update_df(df)
+        assert df.loc[:, y_axis].mean()
+        if y_axis in all_functions_dict:
+            update_df = all_functions_dict[y_axis]
+            df = update_df(df)
+        df[x_axis] = pd.to_datetime(df[x_axis], format="%Y-%m-%d %H:%M:%S")
+        plt.figure(figsize=(10, 5))
+        try:
+            plt.plot(df[x_axis], df[y_axis], marker="o", linestyle="-")
+        except Exception as e:
+            print(e)
+            print("TABLE failed", table, y_axis)
+        plt.xlabel("Date & Time")
+        title = y_axis
+        if title == "bmi":
+            title = "BMI"
+        else:
+            if "vit".lower() in title.lower():
+                title = title[:-1].capitalize() + " " + y_axis[-1]
+            if "_" in title:
+                title = " ".join([x.capitalize() for x in title.split("_")])
+            else:
+                title = title.capitalize()
+        plt.ylabel(y_axis.replace("_", " "))
+        plt.title(f"{title} Graph")
+        plt.xticks(rotation=15)  # Rotate x-axis labels for readability
+        plt.grid(True)
+        # Improve date formatting on x-axis
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M"))
+        plt.gca().xaxis.set_major_locator(mdates.AutoDateLocator())
+        plt.tight_layout()
+        with plt.ion():
+            plot_fn()
+        plt.close("all")
+
+
 def plot_fn():
     plt.show()
     return True
@@ -100,6 +139,9 @@ all_functions_dict = {
     "time_slept": time_slept_to_hrs,
     "exercise_time": exercise_time,
 }
+
+
+"""PHASE 1 TESTS"""
 
 
 def test_db_exists():
@@ -383,6 +425,9 @@ def test_insert_delete_mood_tracking():
     assert new_count == old_count
 
 
+"""PHASE 2 TESTS"""
+
+
 def test_successful_generation_display_of_plots():
     for table in all_tables_dict.keys():
         for y_axis in all_tables_dict[table]:
@@ -428,39 +473,3 @@ def test_random_ranges_of_time():
             pass
         else:
             make_plot(table, x_axis, df_data)
-
-
-def make_plot(table, x_axis, df):
-    for y_axis in all_tables_dict[table]:
-        if y_axis in all_functions_dict:
-            update_df = all_functions_dict[y_axis]
-            df = update_df(df)
-        df[x_axis] = pd.to_datetime(df[x_axis], format="%Y-%m-%d %H:%M:%S")
-        plt.figure(figsize=(10, 5))
-        try:
-            plt.plot(df[x_axis], df[y_axis], marker="o", linestyle="-")
-        except Exception as e:
-            print(e)
-            print("TABLE failed", table, y_axis)
-        plt.xlabel("Date & Time")
-        title = y_axis
-        if title == "bmi":
-            title = "BMI"
-        else:
-            if "vit".lower() in title.lower():
-                title = title[:-1].capitalize() + " " + y_axis[-1]
-            if "_" in title:
-                title = " ".join([x.capitalize() for x in title.split("_")])
-            else:
-                title = title.capitalize()
-        plt.ylabel(y_axis.replace("_", " "))
-        plt.title(f"{title} Graph")
-        plt.xticks(rotation=15)  # Rotate x-axis labels for readability
-        plt.grid(True)
-        # Improve date formatting on x-axis
-        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M"))
-        plt.gca().xaxis.set_major_locator(mdates.AutoDateLocator())
-        plt.tight_layout()
-        with plt.ion():
-            plot_fn()
-        plt.close("all")
