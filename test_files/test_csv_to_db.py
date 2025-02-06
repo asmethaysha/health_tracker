@@ -1,13 +1,10 @@
 import os
-import sys
-import numpy as np
 import pytest
 import sqlite3
 import pandas as pd
 import pathlib
 import datetime
 from datetime import timedelta
-import time
 
 
 def convert_to_insert_template(create_cmd):

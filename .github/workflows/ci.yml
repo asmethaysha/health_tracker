@@ -31,6 +31,7 @@ jobs:
         run: |
           pip install pytest
           pip install pandas
+          pip install matplotlib
       
       - name: Generate files and ingest to test.db
         run: |

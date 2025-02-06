@@ -71,7 +71,7 @@ def historical_weight():
             # missing day of recording data)
             continue
         else:
-            timestamp = curr.strftime("%Y%m%d %H%M%S")
+            timestamp = curr.strftime("%Y-%m-%d %H:%M:%S")
             weight = weight + random.uniform(-1, 1)
             height = random.uniform(0.5, 2.0)
             # bmi = weight / (height * height)  # we will calculate this at runtime
@@ -83,10 +83,10 @@ def historical_weight():
 
 def food_tracking():
     """
-    File structure: timestamp,meal_category,food_name,num_servings,mass,
+    File structure: timestamp,meal_category, calories,food_name,num_servings,mass,
                     vitaminA,vitaminC,vitaminD,vitaminE,iron,
                     sodium,carbohydrates,comments
-    DB structure: timestamp,meal_category,food_name,num_servings,mass,
+    DB structure: timestamp,meal_category, calories,food_name,num_servings,mass,
                     vitaminA,vitaminC,vitaminD,vitaminE,iron,
                     sodium,carbohydrates,comments
     """
@@ -107,12 +107,13 @@ def food_tracking():
                     # user may forget to record this meal
                     pass
                 else:
-                    timestamp = curr.strftime("%Y%m%d %H%M%S")
+                    timestamp = curr.strftime("%Y-%m-%d %H:%M:%S")
                     meal_category = meal
                     food_name = "".join(random.choices(string.ascii_uppercase, k=100))
                     mass, serving_mass = random.uniform(10, 999), random.uniform(
                         10, 999
                     )
+                    calories = int(random.uniform(1, 2000))
                     num_servings = mass / serving_mass
                     vitaminA, vitaminC, vitaminD, vitaminE = (
                         random.uniform(0, int(math.pow(2, 31))),
@@ -130,9 +131,10 @@ def food_tracking():
                     )
                     comment = re.escape(comment)
                     comment = string_cleaner(comment)
-                    new_row = "{},{},{},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{}\n".format(
+                    new_row = "{},{},{},{},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{:.1f},{}\n".format(
                         timestamp,
                         meal_category,
+                        calories,
                         food_name,
                         num_servings,
                         mass,
@@ -149,7 +151,7 @@ def food_tracking():
                     curr += timedelta(seconds=random.randrange(10800))  # approx 3hr
             curr += timedelta(seconds=random.randrange(36000))  # 10hr
     out = (
-        "timestamp,meal_category,food_name,num_servings,mass,vitaminA,vitaminC,vitaminD,vitaminE,iron,sodium,carbohydrates,comments\n"
+        "timestamp,meal_category,calories,food_name,num_servings,mass,vitaminA,vitaminC,vitaminD,vitaminE,iron,sodium,carbohydrates,comments\n"
         + out
     )
     return out
@@ -172,7 +174,7 @@ def mood_tracking():
             # missing day of recording data)
             continue
         else:
-            timestamp = curr.strftime("%Y%m%d %H%M%S")
+            timestamp = curr.strftime("%Y-%m-%d %H:%M:%S")
             happiness_rating = random.choice([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
             comment = "".join(
                 random.choices(string.ascii_letters + string.punctuation, k=256)
@@ -187,8 +189,8 @@ def mood_tracking():
 
 def exercise_tracking():
     """
-    File structure: starting_timestamp,ending_timestamp,exercise_name,calories,reps,steps,comments
-    DB structure: starting_timestamp,ending_timestamp,exercise_name,calories,reps,steps,comments
+    File structure: starting_timestamp,ending_timestamp,exercise_name,calories_burned,reps,steps,comments
+    DB structure: starting_timestamp,ending_timestamp,exercise_name,calories_burned,reps,steps,comments
     """
     out = ""
     start, end = (
@@ -202,15 +204,15 @@ def exercise_tracking():
             # missing day of recording data)
             continue
         else:
-            starting_timestamp = curr.strftime("%Y%m%d %H%M%S")
+            starting_timestamp = curr.strftime("%Y-%m-%d %H:%M:%S")
             ending_timestamp = (
                 curr + timedelta(seconds=random.randint(1, 86400))
-            ).strftime("%Y%m%d %H%M%S")
+            ).strftime("%Y-%m-%d %H:%M:%S")
             excercise_name = "".join(
                 random.choices(string.ascii_letters + "-" + string.digits, k=20)
             )
             excercise_name = excercise_name.replace(",", "")
-            calories = random.randint(1, 10000000)
+            calories_burned = random.randint(1, 10000000)
             if random.randint(1, 10) > 8:
                 reps = random.randint(1, 15)
             else:
@@ -228,14 +230,14 @@ def exercise_tracking():
                 starting_timestamp,
                 ending_timestamp,
                 excercise_name,
-                calories,
+                calories_burned,
                 reps,
                 steps,
                 comment,
             )
             curr += timedelta(seconds=random.randrange(86400))
     out = (
-        "starting_timestamp,ending_timestamp,exercise_name,calories,reps,steps,comments\n"
+        "starting_timestamp,ending_timestamp,exercise_name,calories_burned,reps,steps,comments\n"
         + out
     )
     return out
