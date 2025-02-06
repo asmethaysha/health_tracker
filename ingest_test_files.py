@@ -72,9 +72,9 @@ def main():
         create_all_tables = (
             "CREATE TABLE SLEEP_TRACKING(starting_timestamp TIMESTAMP NOT NULL, ending_timestamp TIMESTAMP NOT NULL, time_slept INTEGER NOT NULL, comments VARCHAR); "
             "CREATE TABLE HISTORICAL_WEIGHT(timestamp TIMESTAMP NOT NULL, weight FLOAT NOT NULL); "
-            "CREATE TABLE FOOD_TRACKING(timestamp TIMESTAMP NOT NULL, meal_category VARCHAR NOT NULL, food_name VARCHAR NOT NULL, num_servings FLOAT NOT NULL, mass FLOAT, vitaminA FLOAT, vitaminC FLOAT, vitaminD FLOAT, vitaminE FLOAT, iron FLOAT, sodium FLOAT, carbohydrates FLOAT, comments VARCHAR); "
+            "CREATE TABLE FOOD_TRACKING(timestamp TIMESTAMP NOT NULL, meal_category VARCHAR NOT NULL, calories INTEGER NOT NULL, food_name VARCHAR NOT NULL, num_servings FLOAT NOT NULL, mass FLOAT, vitaminA FLOAT, vitaminC FLOAT, vitaminD FLOAT, vitaminE FLOAT, iron FLOAT, sodium FLOAT, carbohydrates FLOAT, comments VARCHAR); "
             "CREATE TABLE MOOD_TRACKING(timestamp TIMESTAMP, happiness_rating INTEGER, comments VARCHAR); "
-            "CREATE TABLE EXERCISE_TRACKING(starting_timestamp TIMESTAMP NOT NULL, ending_timestamp TIMESTAMP NOT NULL, exercise_name VARCHAR NOT NULL, calories INTEGER NOT NULL, reps INTEGER, steps INTEGER, comments VARCHAR);"
+            "CREATE TABLE EXERCISE_TRACKING(starting_timestamp TIMESTAMP NOT NULL, ending_timestamp TIMESTAMP NOT NULL, exercise_name VARCHAR NOT NULL, calories_burned INTEGER NOT NULL, reps INTEGER, steps INTEGER, comments VARCHAR);"
         )
         create_all_tables = create_all_tables.split(";")
         create_all_tables = [x.strip() for x in create_all_tables]
@@ -101,7 +101,11 @@ def main():
                     insert_query_format, file, test_dir
                 )
                 if insert_query:
-                    cursor.execute(insert_query)
+                    try:
+                        cursor.execute(insert_query)
+                    except:
+                        print(insert_query)
+                        sys.exit(1)
     conn.commit()
     conn.close()
 
