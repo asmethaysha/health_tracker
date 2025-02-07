@@ -13,6 +13,14 @@
     <p>{{ status }} and {{ temp }} &deg;</p>
     <p>Feels like {{ feels_like }} &deg;</p>
 
+    <form action="/log_workout" method="POST">
+        <input type="text" name="exercise" id="exercise" placeholder="Exercise Name" required />
+        <input type="date" name="date" id="date" required />
+        <input type="time" name="time" id="time" required />
+        <button type="submit">Log Workout</button>
+    </form>
+    
+
     <form action="/weather">
         <input type="text" name="city" id="city" placeholder="Enter a City" />
         <button type="submit">Submit</button>

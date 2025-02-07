@@ -35,5 +35,15 @@ def get_weather():
     )
 
 
+@app.route('/log_workout', methods=['POST'])
+def log_workout():
+    exercise = request.form.get('exercise')
+    date = request.form.get('date')
+    time = request.form.get('time')
+
+    # For now, just returning the logged data
+    return f"Workout Logged: {exercise} on {date} at {time}"
+
+
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)
