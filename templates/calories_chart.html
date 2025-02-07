@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calories Burned Over Time</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Calories Burned Over Time</h2>
+    <canvas id="caloriesChart"></canvas>
+
+    <script>
+        async function fetchChartData() {
+            const response = await fetch('/calories_chart');
+            const data = await response.json();
+
+            const ctx = document.getElementById('caloriesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Calories Burned',
+                        data: data.values,
+                        borderColor: 'red',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Date' } },
+                        y: { title: { display: true, text: 'Calories' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        fetchChartData();
+    </script>
+</body>
+</html>

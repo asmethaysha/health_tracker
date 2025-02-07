@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Sleep Logs</title>
+</head>
+<body>
+    <h1>Your Sleep Logs</h1>
+    <table border="1">
+        <tr>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Time Slept (hrs)</th>
+            <th>Comments</th>
+        </tr>
+        {% for sleep in sleep_data %}
+        <tr>
+            <td>{{ sleep[1] }}</td>
+            <td>{{ sleep[2] }}</td>
+            <td>{{ sleep[3] }}</td>
+            <td>{{ sleep[4] or "No Comments" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/">Go Back</a>
+</body>
+</html>

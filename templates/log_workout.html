@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Workout</title>
+</head>
+<body>
+    <h2>Log Your Workout</h2>
+    <form method="post">
+        <label for="exercise_name">Exercise Name:</label>
+        <input type="text" id="exercise_name" name="exercise_name" required>
+        <br>
+
+        <label for="calories_burned">Calories Burned:</label>
+        <input type="number" id="calories_burned" name="calories_burned" required>
+        <br>
+
+        <label for="repetitions">Repetitions (optional):</label>
+        <input type="number" id="repetitions" name="repetitions">
+        <br>
+
+        <label for="steps">Steps (optional):</label>
+        <input type="number" id="steps" name="steps">
+        <br>
+
+        <label for="comments">Comments (optional):</label>
+        <textarea id="comments" name="comments"></textarea>
+        <br>
+
+        <label for="starting_timestamp">Starting Time:</label>
+        <input type="datetime-local" id="starting_timestamp" name="starting_timestamp" required>
+        <br>
+
+        <label for="ending_timestamp">Ending Time:</label>
+        <input type="datetime-local" id="ending_timestamp" name="ending_timestamp" required>
+        <br>
+
+        <button type="submit">Log Workout</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('view_workouts') }}">View Logged Workouts</a>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Sleep Chart</h2>
+    <canvas id="sleepChart"></canvas>
+
+    <script>
+        async function fetchSleepData() {
+            const response = await fetch('/get_sleep_data');
+            const data = await response.json();
+
+            const ctx = document.getElementById('sleepChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Hours Slept',
+                        data: data.values,
+                        borderColor: 'blue',
+                        fill: false,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Date & Time' } },
+                        y: { title: { display: true, text: 'Hours Slept' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        fetchSleepData();
+    </script>
+</body>
+</html>

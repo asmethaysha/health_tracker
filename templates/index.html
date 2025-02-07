@@ -4,16 +4,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello User, Welcome to Healthfit. Get Ready to track your health and get in control of it</title>
+    <title>Healthfit - Track Your Health</title>
     <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>Hello User, Welcome to Healthfit. Get Ready to track your health and get in control of it</h1>
-    <form action="/weather">
-        <input type="text" name="city" id="city" placeholder="Enter your home City" />
-        <button type="submit">Submit</button>
+    <h1>Welcome to Healthfit! Track your workouts and stay in control.</h1>
+
+    <form action="/log_workout" method="POST">
+        <label for="starting_timestamp">Start Time:</label>
+        <input type="datetime-local" name="starting_timestamp" id="starting_timestamp" required />
+
+        <label for="ending_timestamp">End Time:</label>
+        <input type="datetime-local" name="ending_timestamp" id="ending_timestamp" required />
+
+        <label for="exercise_name">Exercise Name:</label>
+        <input type="text" name="exercise_name" id="exercise_name" placeholder="e.g., Running, Squats" required />
+
+        <label for="calories_burned">Calories Burned:</label>
+        <input type="number" name="calories_burned" id="calories_burned" placeholder="e.g., 200" required />
+
+        <label for="repetitions">Repetitions:</label>
+        <input type="number" name="repetitions" id="repetitions" placeholder="e.g., 10" />
+
+        <label for="steps">Steps:</label>
+        <input type="number" name="steps" id="steps" placeholder="e.g., 5000" />
+
+        <label for="comments">Comments:</label>
+        <textarea name="comments" id="comments" placeholder="Add any notes..."></textarea>
+
+        <button type="submit">Log Workout</button>
     </form>
+
+    <h2>View Your Workouts</h2>
+    <a href="/workouts">See Logged Workouts</a>
+
+    <h2>Track Your Calories Burned</h2>
+    <a href="/view_chart">View Calories Burned Chart</a>
+
+    <!-- Sleep Tracking Form -->
+    <h2>Log Your Sleep</h2>
+    <form action="/log_sleep" method="POST">
+        <label for="sleep_start">Sleep Start Time:</label>
+        <input type="datetime-local" name="sleep_start" required />
+
+        <label for="sleep_end">Sleep End Time:</label>
+        <input type="datetime-local" name="sleep_end" required />
+
+        <label for="time_slept">Total Time Slept (hours):</label>
+        <input type="number" step="0.1" name="time_slept" placeholder="e.g., 7.5" required />
+
+        <label for="sleep_comments">Comments:</label>
+        <textarea name="sleep_comments" placeholder="Any sleep notes?"></textarea>
+
+        <button type="submit">Log Sleep</button>
+    </form>
+
+    <h2>View Your Sleep</h2>
+    <a href="/sleep">See Logged Sleep</a>
+
+
+    <h2>Sleep Tracking Chart</h2>
+    <a href="/sleep_chart">View Sleep Trend Chart</a>
+
+    
+
 </body>
 
 </html>
