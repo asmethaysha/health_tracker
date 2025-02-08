@@ -1,3 +1,11 @@
+*.csv
+*.txt
+*.sqlite
+*.pyc
+*.json
+*.db
+*.jpg
+*.pkl
 .venv
 .env
 .vscode
