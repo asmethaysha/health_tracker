@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight History</title>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+
+<body>
+    <h2>Weight & Body Fat History</h2>
+    <table border="1">
+        <tr>
+            <th>timestamp</th>
+            <th>Weight (kg)</th>
+            <th>Body Fat (%)</th>
+        </tr>
+        {% for entry in weight_history %}
+        <tr>
+            <td>{{ entry[0] }}</td>
+            <td>{{ entry[1] }}</td>                
+            <td>{{ entry[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{{ url_for('log_weight') }}">Log New Entry</a>
+    <a href="{{ url_for('index') }}">Home</a>
+</body>
+</html>

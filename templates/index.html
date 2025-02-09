@@ -4,71 +4,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthfit - Track Your Health</title>
+    <title>Healthfit - Track Your Health App</title>
     <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
 </head>
 
+<br>
 <body>
-    <h1>Welcome to Healthfit! Track your workouts and stay in control.</h1>
+    <h1>&emsp; Welcome to Healthfit! <br> &emsp; Be Empowered! <br> Track your workouts and stay in control of your Health.</h1>
+    <br>
+    <p>
+        This is a web application which will be your personal health tracker. The application is designed to help you monitor your health and wellbeing, track workouts, weight, sleep and nutrition intake. Visualize trends over time to make best and aware decisions to improve your health.
+    </p>
+
+    <br>
+    <br>
+    <h2>Log Workout</h2>
 
     <form action="/log_workout" method="POST">
         <label for="starting_timestamp">Start Time:</label>
-        <input type="datetime-local" name="starting_timestamp" id="starting_timestamp" required />
+        <input type="datetime-local" name="starting_timestamp" id="starting_timestamp" required /><br>
 
         <label for="ending_timestamp">End Time:</label>
-        <input type="datetime-local" name="ending_timestamp" id="ending_timestamp" required />
+        <input type="datetime-local" name="ending_timestamp" id="ending_timestamp" required /><br>
 
         <label for="exercise_name">Exercise Name:</label>
-        <input type="text" name="exercise_name" id="exercise_name" placeholder="e.g., Running, Squats" required />
+        <input type="text" name="exercise_name" id="exercise_name" placeholder="e.g., Running, Squats" required /><br>
 
         <label for="calories_burned">Calories Burned:</label>
-        <input type="number" name="calories_burned" id="calories_burned" placeholder="e.g., 200" required />
+        <input type="number" name="calories_burned" id="calories_burned" placeholder="e.g., 200" required /><br>
 
         <label for="repetitions">Repetitions:</label>
-        <input type="number" name="repetitions" id="repetitions" placeholder="e.g., 10" />
+        <input type="number" name="repetitions" id="repetitions" placeholder="e.g., 10" /><br>
 
         <label for="steps">Steps:</label>
-        <input type="number" name="steps" id="steps" placeholder="e.g., 5000" />
+        <input type="number" name="steps" id="steps" placeholder="e.g., 5000" /><br>
 
         <label for="comments">Comments:</label>
-        <textarea name="comments" id="comments" placeholder="Add any notes..."></textarea>
+        <textarea name="comments" id="comments" placeholder="Add any notes..."></textarea><br>
 
         <button type="submit">Log Workout</button>
     </form>
 
-    <h2>View Your Workouts</h2>
-    <a href="/workouts">See Logged Workouts</a>
+    <br>
+    <h2>Workout History</h2>
+    <a href="/workouts">Past Logged Workouts</a>
 
-    <h2>Track Your Calories Burned</h2>
-    <a href="/view_chart">View Calories Burned Chart</a>
+    <br>
+    <h2>Calories Burnt Trend</h2>
+    <a href="/view_chart">View Calories Burnt Over time in this Chart</a>
+
+    <p>&#9733;&#9733;</p>
 
     <!-- Sleep Tracking Form -->
-    <h2>Log Your Sleep</h2>
+    <br>
+    <br>
+    <h2>Log Sleep</h2>
     <form action="/log_sleep" method="POST">
         <label for="sleep_start">Sleep Start Time:</label>
-        <input type="datetime-local" name="sleep_start" required />
+        <input type="datetime-local" name="sleep_start" required /><br>
 
         <label for="sleep_end">Sleep End Time:</label>
-        <input type="datetime-local" name="sleep_end" required />
+        <input type="datetime-local" name="sleep_end" required /><br>
 
         <label for="time_slept">Total Time Slept (hours):</label>
-        <input type="number" step="0.1" name="time_slept" placeholder="e.g., 7.5" required />
+        <input type="number" step="0.1" name="time_slept" placeholder="e.g., 7.5" required /><br>
 
         <label for="sleep_comments">Comments:</label>
-        <textarea name="sleep_comments" placeholder="Any sleep notes?"></textarea>
+        <textarea name="sleep_comments" placeholder="Any sleep notes?"></textarea><br>
 
         <button type="submit">Log Sleep</button>
     </form>
 
-    <h2>View Your Sleep</h2>
+    <br>
+    <h2>Sleep History</h2>
     <a href="/sleep">See Logged Sleep</a>
 
-
-    <h2>Sleep Tracking Chart</h2>
+    <br>
+    <h2>Sleep Trends Over Time</h2>
     <a href="/sleep_chart">View Sleep Trend Chart</a>
 
+    <p>&#9733;&#9733;</p>
+
+    <br>
+    <h2>Log Weight and Body Fat</h2>
+    <a href="{{ url_for('log_weight') }}">Log Weight & Body Fat</a>
+
+
+    <br>
+    <h2>Weight and Body Fat History</h2>
+    <a href="{{ url_for('view_weight') }}">View Logged Weight and Body Fat</a>
+
+
+    <br>
+    <h2>Weight Trend Over Time</h2>
+    <a href="/view_weight_chart">View Weight Trends Over time in this Chart</a>
+
+    <p>&#9733;&#9733;</p>
+
+    <h2>Log Happiness (on the scale of 100)</h2>
+    <a href="{{ url_for('log_happiness') }}">Log Happiness</a>
+
+
+    <br>
+    <h2>View Logged Happiness</h2>
+    <a href="{{ url_for('view_happiness') }}">View Logged happiness</a>
+
+
+    <br>
+    <h2>Happiness Over Time</h2>
+    <a href="/view_happiness_chart">View Happiness Index Trend Over time in this Chart</a>
+
+
+    <p>&#9733;&#9733;</p>
+
+    <h2>Log Your Nutritious Meals</h2>
+    <a href="{{ url_for('log_meal') }}">Log Meals</a>
+
+
+    <br>
+    <h2>View Your Logged Meals</h2>
+    <a href="{{ url_for('view_meals') }}">View Logged Meals</a>
     
+    <p>&#9733;&#9733; Thanks for using the HealthFit App &#9733;&#9733;</p>
 
 </body>
+
+
 
 </html>

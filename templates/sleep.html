@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Your Sleep Logs</title>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
 </head>
 <body>
     <h1>Your Sleep Logs</h1>
@@ -23,6 +24,6 @@
         {% endfor %}
     </table>
     <br>
-    <a href="/">Go Back</a>
+    <a href="/">Home Page</a>
 </body>
 </html>

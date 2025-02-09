@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Happiness</title>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <h2>Log Your Happiness (on the scale of 100)</h2>
+    <form method="post">
+        
+        <label for="timestamp">Time:</label>
+        <input type="datetime-local" id="timestamp" name="timestamp" required>
+        <br>
+
+        <label for="happiness">Happiness (Scale of 100):</label>
+        <input type="number" id="happiness" name="happiness" required>
+        <br>
+
+        <label for="comments">Comments (optional):</label>
+        <textarea id="comments" name="comments"></textarea>
+        <br>
+
+        <button type="submit">Log Happiness</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('view_happiness') }}">View Logged Happiness</a>
+    <a href="{{ url_for('index') }}">Home Page</a>
+</body>
+</html>

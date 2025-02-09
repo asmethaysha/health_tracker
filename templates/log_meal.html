@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Meal</title>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <h2>Log Your Nutritious Meal</h2>
+    <form method="post">
+        <label for="meal_category">Meal Category (Breakfast, lunch, Dinner, Snacks):</label>
+        <input type="text" id="meal_category" name="meal_category" required>
+        <br>
+
+        <label for="calories">Calories:</label>
+        <input type="number" id="calories" name="calories" required>
+        <br>
+
+        <label for="number_of_servings">Number of Servings:</label>
+        <input type="number" id="number_of_servings" name="number_of_servings" required>
+        <br>
+
+        <label for="weight_grams">Weight (Grams):</label>
+        <input type="number" id="weight_grams" name="weight_grams" required>
+        <br>
+
+        <label for="vitamins">Vitamins:</label>
+        <input type="number" id="vitamins" name="vitamins" step="0.1">
+        <br>
+
+        <label for="minerals">Minerals:</label>
+        <input type="number" id="minerals" name="minerals" step="0.1">
+        <br>
+
+        <label for="carbohydrates">Carbohydrates:</label>
+        <input type="number" id="carbohydrates" name="carbohydrates" step="0.1">
+        <br>
+
+        <label for="protein">Protein:</label>
+        <input type="number" id="protein" name="protein" step="0.1">
+        <br>
+
+        <label for="comments">Comments (optional):</label>
+        <textarea id="comments" name="comments"></textarea>
+        <br>
+
+        <label for="timestamp">Timestamp:</label>
+        <input type="datetime-local" id="timestamp" name="timestamp" required>
+        <br>
+
+        <button type="submit">Log Meal</button>
+    </form>
+</body>
+
+    <br>
+    <a href="{{ url_for('view_meals') }}">View Logged Meals</a>
+    <a href="{{ url_for('index') }}">Home Page</a>
+</body>
+</html>

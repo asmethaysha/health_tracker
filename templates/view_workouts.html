@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workout History</title>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
 </head>
 <body>
     <h2>Workout History</h2>
@@ -32,5 +33,6 @@
 
     <br>
     <a href="{{ url_for('log_workout') }}">Log Another Workout</a>
+    <a href="{{ url_for('index') }}">Home Page</a>
 </body>
 </html>

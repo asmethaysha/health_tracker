@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Intake History</title>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <h2>Meal Intake History</h2>
+    <table border="1">
+        <tr>
+            <th>Meal Category</th>
+            <th>Calories</th>
+            <th>Number of Servings</th>
+            <th>Weight (Grams)</th>
+            <th>Vitamins</th>
+            <th>Minerals</th>
+            <th>Carbohydrates</th>
+            <th>Protein</th>
+            <th>Comments</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for meal in meals %}
+        <tr>
+            <td>{{ meal[0] }}</td>
+            <td>{{ meal[1] }}</td>
+            <td>{{ meal[2] }}</td>
+            <td>{{ meal[3] }}</td>
+            <td>{{ meal[4] }}</td>
+            <td>{{ meal[5] }}</td>
+            <td>{{ meal[6] }}</td>
+            <td>{{ meal[7] }}</td>
+            <td>{{ meal[8] }}</td>
+            <td>{{ meal[9] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{{ url_for('log_meal') }}">Log Another Meal</a>
+    <a href="{{ url_for('index') }}">Home Page</a>
+</body>
+</html>

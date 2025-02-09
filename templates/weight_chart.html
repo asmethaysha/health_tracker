@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight & Body Fat Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <h2>Weight & Body Fat Trends</h2>
+    <canvas id="weightChart"></canvas>
+    
+    <script>
+        async function fetchWeightData() {
+            const response = await fetch('/weight_chart');
+            const data = await response.json();
+
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: 'Weight (kg)',
+                            data: data.values,
+                            borderColor: 'red',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+
+                        x: { title: { display: true, text: 'Date' } },
+
+                        y: { title: { display: true, text: 'Weight' }, beginAtZero: true }
+
+                    }
+                }
+            });
+        }
+        
+        fetchWeightData();
+    </script>
+    
+    <br>
+    <a href="{{ url_for('index') }}">Home</a>
+</body>
+</html>

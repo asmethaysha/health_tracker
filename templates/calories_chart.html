@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calories Burned Over Time</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
 </head>
+
 <body>
-    <h2>Calories Burned Over Time</h2>
+    <h2>Calorie Burn Over Time</h2>
     <canvas id="caloriesChart"></canvas>
 
     <script>
@@ -40,5 +42,6 @@
 
         fetchChartData();
     </script>
+    <a href="{{ url_for('index') }}">Home Page</a>
 </body>
 </html>
