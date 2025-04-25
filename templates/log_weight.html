@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Weight</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h2>Log Weight & Body Fat</h2>
+        <form action="{{ url_for('log_weight') }}" method="post" class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="datetime-local" id="timestamp" name="timestamp" required>
+                    <label for="timestamp">Date & Time:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m6">
+                    <input type="number" id="weight" name="weight" required>
+                    <label for="weight">Weight (kg):</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input type="number" id="body_fat_percentage" name="body_fat_percentage" required>
+                    <label for="body_fat_percentage">Body Fat Percentage (%):</label>
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Log Entry
+                <i class="material-icons right">assignment</i>
+            </button>
+        </form>
+        <br>
+        <a class="waves-effect waves-light btn" href="{{ url_for('view_weight') }}">View Logged Data</a>
+        <br>
+        <a class="waves-effect waves-light btn" href="{{ url_for('index') }}">Home</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
