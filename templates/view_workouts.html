@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout History</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h2>Workout History</h2>
+        <table class="striped responsive-table">
+            <thead>
+                <tr>
+                    <th>Exercise Name</th>
+                    <th>Calories Burned</th>
+                    <th>Repetitions</th>
+                    <th>Steps</th>
+                    <th>Comments</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for workout in workouts %}
+                <tr>
+                    <td>{{ workout[0] }}</td>
+                    <td>{{ workout[1] }}</td>
+                    <td>{{ workout[2] if workout[2] else 'N/A' }}</td>
+                    <td>{{ workout[3] if workout[3] else 'N/A' }}</td>
+                    <td>{{ workout[4] if workout[4] else 'N/A' }}</td>
+                    <td>{{ workout[5] }}</td>
+                    <td>{{ workout[6] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <a class="waves-effect waves-light btn" href="{{ url_for('log_workout') }}">Log Another Workout</a>
+        <a class="waves-effect waves-light btn" href="{{ url_for('index') }}">Home Page</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
