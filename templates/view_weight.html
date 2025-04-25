@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight History</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <h2>Weight & Body Fat History</h2>
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Weight (kg)</th>
+                    <th>Body Fat (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in weight_history %}
+                <tr>
+                    <td>{{ entry[0] }}</td>
+                    <td>{{ entry[1] }}</td>
+                    <td>{{ entry[2] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <a class="waves-effect waves-light btn" href="{{ url_for('log_weight') }}">Log New Entry</a>
+        <a class="waves-effect waves-light btn" href="{{ url_for('index') }}">Home</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
