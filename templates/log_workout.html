@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Workout</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h2>Log Your Workout</h2>
+        <form method="post" class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" id="exercise_name" name="exercise_name" required>
+                    <label for="exercise_name">Exercise Name:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m6">
+                    <input type="number" id="calories_burned" name="calories_burned" required>
+                    <label for="calories_burned">Calories Burned:</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input type="number" id="repetitions" name="repetitions">
+                    <label for="repetitions">Repetitions (optional):</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m6">
+                    <input type="number" id="steps" name="steps">
+                    <label for="steps">Steps (optional):</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+                    <label for="comments">Comments (optional):</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m6">
+                    <input type="datetime-local" id="starting_timestamp" name="starting_timestamp" required>
+                    <label for="starting_timestamp">Starting Time:</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input type="datetime-local" id="ending_timestamp" name="ending_timestamp" required>
+                    <label for="ending_timestamp">Ending Time:</label>
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Log Workout
+                <i class="material-icons right">fitness_center</i>
+            </button>
+        </form>
+
+        <br>
+        <a class="waves-effect waves-light btn" href="{{ url_for('view_workouts') }}">View Logged Workouts</a>
+        <a class="waves-effect waves-light btn" href="{{ url_for('index') }}">Home Page</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
