@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Intake History</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h2>Meal Intake History</h2>
+        <table class="striped responsive-table">
+            <thead>
+                <tr>
+                    <th>Meal Category</th>
+                    <th>Calories</th>
+                    <th>Servings</th>
+                    <th>Weight (Grams)</th>
+                    <th>Vitamins</th>
+                    <th>Minerals</th>
+                    <th>Carbs</th>
+                    <th>Protein</th>
+                    <th>Comments</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for meal in meals %}
+                <tr>
+                    <td>{{ meal[0] }}</td>
+                    <td>{{ meal[1] }}</td>
+                    <td>{{ meal[2] }}</td>
+                    <td>{{ meal[3] }}</td>
+                    <td>{{ meal[4] or "N/A" }}</td>
+                    <td>{{ meal[5] or "N/A" }}</td>
+                    <td>{{ meal[6] or "N/A" }}</td>
+                    <td>{{ meal[7] or "N/A" }}</td>
+                    <td>{{ meal[8] or "No Comments" }}</td>
+                    <td>{{ meal[9] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <a class="waves-effect waves-light btn" href="{{ url_for('log_meal') }}">Log Another Meal</a>
+        <a class="waves-effect waves-light btn" href="{{ url_for('index') }}">Home Page</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
