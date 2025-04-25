@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Happiness</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h2>Log Your Happiness (on the scale of 100)</h2>
+        <form method="post" class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="datetime-local" id="timestamp" name="timestamp" required>
+                    <label for="timestamp">Time:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="number" id="happiness" name="happiness" min="0" max="100" required>
+                    <label for="happiness">Happiness (Scale of 100):</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+                    <label for="comments">Comments (optional):</label>
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Log Happiness
+                <i class="material-icons right">sentiment_satisfied_alt</i>
+            </button>
+        </form>
+
+        <br>
+        <a class="waves-effect waves-light btn" href="{{ url_for('view_happiness') }}">View Logged Happiness</a>
+        <a class="waves-effect waves-light btn" href="{{ url_for('index') }}">Home Page</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
