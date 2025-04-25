@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happiness Index Over Time</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <h2>Happiness Over Time</h2>
+        <canvas id="happinessChart"></canvas>
+
+        <script>
+            async function fetchChartData() {
+                const response = await fetch('/happiness_chart');
+                const data = await response.json();
+
+                const ctx = document.getElementById('happinessChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Happiness Index',
+                            data: data.values,
+                            borderColor: 'green', // Changed color to something that might associate with happiness
+                            borderWidth: 2,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Happiness Index'
+                                },
+                                beginAtZero: true,
+                                max: 100 // Assuming happiness is on a scale of 0-100
+                            }
+                        }
+                    }
+                });
+            }
+
+            fetchChartData();
+        </script>
+        <br>
+        <a class="waves-effect waves-light btn" href="{{ url_for('index') }}">Home Page</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
